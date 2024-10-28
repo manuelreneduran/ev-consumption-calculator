@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Tabs } from "../ui/tabs";
 
 type TripDetailsFormProps = {
   onSubmit: (data: TripDetailsFormSchema) => void;
@@ -22,6 +23,14 @@ const evOptions = [
   { value: "3", label: "Chevy Bolt" },
   { value: "4", label: "Other" },
 ];
+
+const drivingStyleOptions = [
+  { value: "1", label: "Very Efficient" },
+  { value: "2", label: "Efficient" },
+  { value: "3", label: "Regular (Recommended)" },
+  { value: "4", label: "Aggressive" },
+  { value: "5", label: "Very Aggressive" },
+];
 export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
   const form = useForm<TripDetailsFormSchema>({
     resolver: zodResolver(tripDetailsFormSchema),
@@ -30,7 +39,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
     defaultValues: {
       origin: "",
       destination: "",
-      drivingStyle: 3, // Default value (e.g., "Regular")
+      drivingStyle: "3", // Default value (e.g., "Regular")
       evType: "", // Default to an empty value or the first EV type
     },
   });
@@ -80,7 +89,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
                   defaultValue={field.value}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a section" />
+                    <SelectValue placeholder="Select a EV" />
                   </SelectTrigger>
                   <SelectContent>
                     {evOptions.map((option) => (
@@ -95,6 +104,33 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
           )}
         />
 
+        {/* Driving Style Dropdown */}
+        <FormField
+          control={form.control}
+          name="drivingStyle"
+          render={({ field }) => (
+            <FormItem className="flex flex-col gap-y-2 relative">
+              <FormLabel>Driving Style</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a driving style" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {drivingStyleOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
