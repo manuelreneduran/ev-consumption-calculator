@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { tripDetailsFormSchema, TripDetailsFormSchema } from "./schema";
+import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -11,26 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Tabs } from "../ui/tabs";
+import { tripDetailsFormSchema, TripDetailsFormSchema } from "./schema";
+import { drivingStyleOptions, evOptions } from "./const";
 
 type TripDetailsFormProps = {
   onSubmit: (data: TripDetailsFormSchema) => void;
 };
 
-const evOptions = [
-  { value: "1", label: "Tesla Model S" },
-  { value: "2", label: "Nissan Leaf" },
-  { value: "3", label: "Chevy Bolt" },
-  { value: "4", label: "Other" },
-];
-
-const drivingStyleOptions = [
-  { value: "1", label: "Very Efficient" },
-  { value: "2", label: "Efficient" },
-  { value: "3", label: "Regular (Recommended)" },
-  { value: "4", label: "Aggressive" },
-  { value: "5", label: "Very Aggressive" },
-];
 export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
   const form = useForm<TripDetailsFormSchema>({
     resolver: zodResolver(tripDetailsFormSchema),

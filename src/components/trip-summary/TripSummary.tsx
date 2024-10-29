@@ -1,20 +1,55 @@
 import { TTrip } from "../../types";
+import Loader from "../ui/loader";
 
-type TTripSummaryProps = {} & TTrip;
+type TTripSummaryProps = {
+  tripDetails: TTrip | null;
+  isLoading: boolean;
+  isError: boolean;
+};
 
 export function TripSummary({
-  origin_latitude,
-  origin_longitude,
-  destination_latitude,
-  destination_longitude,
-  distance_km,
-  charge_used_kwh,
-  percentage_charge_used,
-  round_trip_charge_used_kwh,
-  round_trip_percentage_used,
-  driving_style,
-  ev_type,
+  tripDetails,
+  isLoading,
+  isError,
 }: TTripSummaryProps) {
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        Error fetching trip details
+      </div>
+    );
+  }
+
+  if (!tripDetails) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        No trip details
+      </div>
+    );
+  }
+
+  const {
+    origin_latitude,
+    origin_longitude,
+    destination_latitude,
+    destination_longitude,
+    distance_km,
+    charge_used_kwh,
+    percentage_charge_used,
+    round_trip_charge_used_kwh,
+    round_trip_percentage_used,
+    driving_style,
+    ev_type,
+  } = tripDetails;
+
   return (
     <div>
       <h2>Trip Summary</h2>

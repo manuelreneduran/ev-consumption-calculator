@@ -1,31 +1,38 @@
+import { useState } from "react";
 import "./App.css";
 import { TripDetailsFormSchema } from "./components/trip-details-form/schema";
 import { TripDetailsForm } from "./components/trip-details-form/TripDetailsForm";
 import { TripSummary } from "./components/trip-summary/TripSummary";
+import TripService from "./services/TripService";
+import { TTrip } from "./types";
 
-const exampleTrip = {
-  id: 1,
-  origin_latitude: 0,
-  origin_longitude: 0,
-  destination_latitude: 0,
-  destination_longitude: 0,
-  distance_km: 0,
-  charge_used_kwh: 0,
-  percentage_charge_used: 0,
-  round_trip_charge_used_kwh: 0,
-  round_trip_percentage_used: 0,
-  driving_style: "",
-  ev_type: 0,
-};
 function App() {
+  const [tripDetails, setTripDetails] = useState<TTrip | null>(null);
+  const [isLoadingTrip, setIsLoadingTrip] = useState(false);
+  const [isErrorTrip, setIsErrorTrip] = useState(false);
+
   const onSubmit = async (data: TripDetailsFormSchema) => {
-    console.log(data);
+    setIsLoadingTrip(true);
+    setIsErrorTrip(false);
+    try {
+      const response = await TripService.getTripDetails(data);
+      setTripDetails(response);
+    } catch (error) {
+      console.error("Error fetching trips details:", error);
+      setIsErrorTrip(true);
+    } finally {
+      setIsLoadingTrip(false);
+    }
   };
 
   return (
     <>
       <TripDetailsForm onSubmit={onSubmit} />
-      <TripSummary {...exampleTrip} />
+      <TripSummary
+        tripDetails={tripDetails}
+        isLoading={isLoadingTrip}
+        isError={isErrorTrip}
+      />
     </>
   );
 }

@@ -5,7 +5,7 @@ import { TTrip } from "../types";
 class TripService {
   async getTripDetails(tripDetails: TripDetailsFormSchema): Promise<TTrip> {
     try {
-      const response = await axios.post("api/trip/estimate-charge/", {
+      const response = await axios.post("trip/estimate-charge/", {
         origin: tripDetails.origin,
         destination: tripDetails.destination,
         ev_type: tripDetails.evType,
