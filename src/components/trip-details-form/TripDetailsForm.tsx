@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import EVService from "../../services/EVService";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
@@ -10,14 +12,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { drivingStyleOptions } from "./const";
 import { tripDetailsFormSchema, TripDetailsFormSchema } from "./schema";
-import { drivingStyleOptions, evOptions } from "./const";
+import { ComboBox } from "../ui/combobox";
 
 type TripDetailsFormProps = {
   onSubmit: (data: TripDetailsFormSchema) => void;
 };
 
+type Option = {
+  value: string;
+  label: string;
+};
+
 export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
+  const [evDropdownOptions, setEvDropdownOptions] = useState<Option[]>([]);
+
   const form = useForm<TripDetailsFormSchema>({
     resolver: zodResolver(tripDetailsFormSchema),
     shouldUnregister: false,
@@ -29,6 +39,14 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
       evType: "", // Default to an empty value or the first EV type
     },
   });
+
+  useEffect(() => {
+    const fetchDropdownOptions = async () => {
+      const options = await EVService.getDropdownOptions();
+      setEvDropdownOptions(options);
+    };
+    fetchDropdownOptions();
+  }, []);
 
   return (
     <Form {...form}>
@@ -70,21 +88,13 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>EV Type</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a EV" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {evOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <ComboBox
+                  onChange={field.onChange}
+                  value={field.value}
+                  options={evDropdownOptions}
+                  placeholder="Select an EV type"
+                  searchPlaceholder="Search for an EV type"
+                />
               </FormControl>
             </FormItem>
           )}
