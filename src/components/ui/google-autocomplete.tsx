@@ -1,9 +1,9 @@
 // GoogleAutocomplete.tsx
+import { SearchIcon } from "lucide-react";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import { Input } from "./input";
-import { SearchIcon } from "lucide-react";
 
 interface GoogleAutocompleteProps {
   name: string;

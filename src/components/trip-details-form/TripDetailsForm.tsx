@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import EVService from "../../services/EVService";
 import { Button } from "../ui/button";
@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { GoogleAutocomplete } from "../ui/google-autocomplete";
 import { drivingStyleOptions } from "./const";
 import { tripDetailsFormSchema, TripDetailsFormSchema } from "./schema";
+import Loader from "../ui/loader";
 
 type TripDetailsFormProps = {
   onSubmit: (data: TripDetailsFormSchema) => void;
@@ -19,8 +20,6 @@ type Option = {
 };
 
 export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
-  const [evDropdownOptions, setEvDropdownOptions] = useState<Option[]>([]);
-
   const form = useForm<TripDetailsFormSchema>({
     resolver: zodResolver(tripDetailsFormSchema),
     shouldUnregister: false,
@@ -33,13 +32,28 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
     },
   });
 
-  useEffect(() => {
-    const fetchDropdownOptions = async () => {
-      const options = await EVService.getDropdownOptions();
-      setEvDropdownOptions(options);
-    };
-    fetchDropdownOptions();
-  }, []);
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["ev-options"],
+    queryFn: EVService.getEvOptions,
+  });
+
+  if (isPending) {
+    return (
+      <div className="flex flex-row justify-center items-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-row justify-center items-center">
+        Whoops! There's been an error. Please try again later.
+      </div>
+    );
+  }
+
+  const evDropdownOptions: Option[] = data;
 
   return (
     <Form {...form}>
@@ -55,7 +69,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>Starting Location</FormLabel>
               <FormControl>
-                <GoogleAutocomplete {...field} />
+                <GoogleAutocomplete name={field.name} />
               </FormControl>
             </FormItem>
           )}
@@ -68,7 +82,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>Destination</FormLabel>
               <FormControl>
-                <GoogleAutocomplete {...field} />
+                <GoogleAutocomplete name={field.name} />
               </FormControl>
             </FormItem>
           )}

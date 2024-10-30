@@ -41,6 +41,9 @@ const MapWithDirections: React.FC<MapWithDirectionsProps> = ({
         mapContainerStyle={{ width: "100%", height: "100%" }}
         zoom={10}
         center={{ lat: 37.7749, lng: -122.4194 }} // Default to a location, like San Francisco
+        options={{
+          mapTypeControl: false, // Disable map/satellite tabs
+        }}
       >
         {directions && <DirectionsRenderer directions={directions} />}
       </GoogleMap>
