@@ -19,6 +19,7 @@ type ComboBoxProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   searchPlaceholder?: string;
+  showSearch?: boolean;
 };
 export function ComboBox({
   options,
@@ -26,6 +27,7 @@ export function ComboBox({
   onChange,
   placeholder,
   searchPlaceholder,
+  showSearch = true,
 }: ComboBoxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -38,12 +40,14 @@ export function ComboBox({
           aria-expanded={open}
           className="w-[200px] justify-between truncate"
         >
-          <span className="truncate">
-            {value
-              ? options.find((option) => option.value === value)?.label
-              : placeholder}
-          </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          {value ? (
+            <span className="truncate">
+              {options.find((option) => option.value === value)?.label}
+            </span>
+          ) : (
+            <span className="truncate text-gray-500">{placeholder}</span>
+          )}
+          <ChevronsUpDown className="ml-3 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className=" p-0">
@@ -59,7 +63,7 @@ export function ComboBox({
             return 0;
           }}
         >
-          <CommandInput placeholder={searchPlaceholder} />
+          {showSearch && <CommandInput placeholder={searchPlaceholder} />}
           <CommandList>
             <CommandEmpty>No items found.</CommandEmpty>
             <CommandGroup>

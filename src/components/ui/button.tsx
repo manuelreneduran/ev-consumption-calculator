@@ -9,11 +9,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary-default text-white shadow hover:bg-primary-light dark:bg-primary-50 dark:text-primary dark:hover:bg-primary-light",
+          "border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200 shadow-sm",
         destructive:
           "bg-red-500 text-primary-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-primary-50 dark:hover:bg-red-900/90",
         outline:
-          "border border-primary-200 bg-white shadow-sm hover:bg-primary-100 hover:text-primary-dark dark:border-primary-dark dark:bg-primary-dark dark:hover:bg-primary-dark dark:hover:text-primary-50",
+          "border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900 shadow-sm",
         secondary:
           "bg-primary-light text-primary-dark shadow-sm hover:bg-primary-light dark:bg-primary-dark dark:text-primary-light dark:hover:bg-primary-dark/80",
         ghost:
@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary-dark underline-offset-4 hover:underline dark:text-primary-light",
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: "h-9 pr-2 pl-3 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",

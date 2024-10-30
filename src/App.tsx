@@ -5,6 +5,8 @@ import { TripDetailsForm } from "./components/trip-details-form/TripDetailsForm"
 import { TripSummary } from "./components/trip-summary/TripSummary";
 import TripService from "./services/TripService";
 import { TTrip } from "./types";
+import { LoadScript } from "@react-google-maps/api";
+import MapWithDirections from "./components/map-with-directions/MapWithDirections";
 
 function App() {
   const [tripDetails, setTripDetails] = useState<TTrip | null>(null);
@@ -25,15 +27,27 @@ function App() {
     }
   };
 
+  const defaultOrigin = "San Francisco";
+  const defaultDestination = "Los Angeles";
+  const destination = tripDetails?.destination || defaultDestination;
+  const origin = tripDetails?.origin || defaultOrigin;
+
   return (
-    <>
-      <TripDetailsForm onSubmit={onSubmit} />
+    <LoadScript
+      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY!}
+      libraries={["places"]}
+    >
+      <div className="flex flex-row">
+        <TripDetailsForm onSubmit={onSubmit} />
+
+        <MapWithDirections origin={origin} destination={destination} />
+      </div>
       <TripSummary
         tripDetails={tripDetails}
         isLoading={isLoadingTrip}
         isError={isErrorTrip}
       />
-    </>
+    </LoadScript>
   );
 }
 

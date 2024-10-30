@@ -1,7 +1,9 @@
 export type TTrip = {
   id: number;
+  origin: string;
   origin_latitude: number;
   origin_longitude: number;
+  destination: string;
   destination_latitude: number;
   destination_longitude: number;
   distance_km: number;

@@ -3,18 +3,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import EVService from "../../services/EVService";
 import { Button } from "../ui/button";
+import { ComboBox } from "../ui/combobox";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { GoogleAutocomplete } from "../ui/google-autocomplete";
 import { drivingStyleOptions } from "./const";
 import { tripDetailsFormSchema, TripDetailsFormSchema } from "./schema";
-import { ComboBox } from "../ui/combobox";
 
 type TripDetailsFormProps = {
   onSubmit: (data: TripDetailsFormSchema) => void;
@@ -35,7 +28,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
     defaultValues: {
       origin: "",
       destination: "",
-      drivingStyle: "3", // Default value (e.g., "Regular")
+      drivingStyle: "", // Default value (e.g., "Regular")
       evType: "", // Default to an empty value or the first EV type
     },
   });
@@ -52,7 +45,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-y-6"
+        className="flex flex-col gap-y-6 w-[200px]"
       >
         {/* Origin Field */}
         <FormField
@@ -62,7 +55,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>Starting Location</FormLabel>
               <FormControl>
-                <Input placeholder="Starting location" {...field} />
+                <GoogleAutocomplete {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -75,7 +68,7 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>Destination</FormLabel>
               <FormControl>
-                <Input placeholder="Destination" {...field} />
+                <GoogleAutocomplete {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -108,21 +101,14 @@ export function TripDetailsForm({ onSubmit }: TripDetailsFormProps) {
             <FormItem className="flex flex-col gap-y-2 relative">
               <FormLabel>Driving Style</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a driving style" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {drivingStyleOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <ComboBox
+                  onChange={field.onChange}
+                  value={field.value}
+                  options={drivingStyleOptions}
+                  placeholder="Select a driving style"
+                  searchPlaceholder="Search for a driving style"
+                  showSearch={false}
+                />
               </FormControl>
             </FormItem>
           )}
